@@ -12,13 +12,13 @@
         <br>
         <h3>List Of Employees</h3>
         <hr>
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <a class="btn btn-primary" href="/SEDP/employee/create.php">New Employee</a>
+        <div class="d-grid gap-1 d-md-flex justify-content-md-end">
+            <a class="btn btn-primary" href="/SEDP/employee/create.php">Add Employee</a>
         </div>
         
         <br>
-        <table class="table">
-            <thead>
+        <table class="table table-striped">
+            <thead class="table-primary">
                 <tr>
                     <th>ID</th>
                     <th>NAME</th>
@@ -27,6 +27,7 @@
                     <th>DEPARTMENT</th>
                     <th>PHONE</th>
                     <th>HIRE DATE</th>
+                    <th>OPERATIONS</th>
                 </tr>
             </thead>
             <tbody>
@@ -62,8 +63,8 @@
                     <td>$row[phone]</td>
                     <td>$row[hire_date]</td>
                     <td>
-                        <a class='btn btn-primary btn-sm' href='/SEDP-HRMS/employee/edit.php?id=$row[id]'>Edit</a>
-                        <a class='btn btn-danger btn-sm' href='/SEDP-HRMS/employee/delete.php?id=$row[id]'>delete</a>
+                        <a class='btn btn-primary btn-sm' href='/SEDP/employee/edit.php?id=$row[id]'>Edit</a>
+                        <a class='btn btn-danger btn-sm' href='/SEDP/employee/delete.php?id=$row[id]'>delete</a>
                     </td>
                 </tr>
                     ";

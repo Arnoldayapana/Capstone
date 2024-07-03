@@ -1,4 +1,5 @@
 <?php
+
 $name="localhost";
 $username="root";
 $password="";
@@ -18,7 +19,36 @@ $hire_date ="";
 $errorMessage = "";
 $successMessage = "";
 
-if( $_SERVER['REQUEST_METHOD'] == 'POST') {
+if ( $_SERVER['REQUEST_METHOD'] =='GET'){
+    //
+
+    if ( !isset($_GET["id"])){
+        header("Location: /SEDP/employee/index.php");
+        exit;
+    }
+    
+    $id =$_GET["id"];
+
+    //read the row of the selected data
+    $sql = "SELECT * FROM employees WHERE id = $id";
+    $result = $connection->query($sql);
+    $row = $result->fetch_assoc();
+
+    if ( !$row ){
+        header("Location: /SEDP/employee/index.php");
+        exit;
+    }
+
+    $name = $row["name"];
+    $email = $row["email"];
+    $address = $row["address"];
+    $department = $row["department"];
+    $phone = $row["phone"];
+    $hire_date = $row["hire_date"];
+}
+else{
+    //Update the data go the employee
+    $id = $_POST["id"];
     $name = $_POST['name'];
     $email = $_POST['email'];
     $address = $_POST['address'];
@@ -26,47 +56,31 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST') {
     $phone = $_POST['phone'];
     $hire_date = $_POST['hire_date'];
 
-    $check_email = mysqli_query($connection, "SELECT * FROM employees WHERE email ='$email'");
-    if(mysqli_num_rows($check_email) > 0){
-        $errorMessage = "The Email already exists!";
-        }else{
-            do {
-                if ( empty($name) || empty($email) || empty($address) || empty($department) ||empty($phone) || empty($hire_date) ){
-                    $errorMessage = "all the field are required";
-                    break;    
-                }
-                //add new client to database
-                $sql = "INSERT INTO employees (name, email, address, department, phone, hire_date) 
-                        VALUES ('$name','$email','$address','$department','$phone','$hire_date')";
-                $result = $connection->query($sql);
-        
-        
-                if (!$result) {
-                    $errorMessage = "Invalid query: " . $connection->error;
-                    break;
-                }
-        
-                $name = "";
-                $email = "";
-                $address = "";
-                $department = "";
-                $phone = "";
-                $hire_date = "";
-        
-                $successMessage = "New Employee added successfuly!";
-        
-                header("location: /SEDP/employee/index.php");
-                exit;
-        
-        
-            } while (false);
+    do {
+        if ( empty($name) || empty($email) || empty($address) || empty($department) ||empty($phone) || empty($hire_date) ){
+            $errorMessage = "all the field are required";
+            break;    
         }
-    }
+        $sql = "UPDATE employees SET name = '$name', email = '$email', address ='$address', department = '$department', phone='$phone', hire_date='$hire_date' " .
+                "WHERE id = $id";
 
+        $result = $connection->query($sql);
 
+        if(!$result){
+            $errorMessage = "Invalid query: " . $connection->error;
+            break;
+        }
 
-    
+        $successMessage = "Employee Updated Succefuly!";
+
+        header("Location: /SEDP/employee/index.php");
+        exit;
+
+    } while(false);
+}
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -92,6 +106,7 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST') {
         ?>
 
         <form method="post">
+            <input type="hidden" name="id" value="<?php echo $id; ?>">
             <div class="row mb-3">
                 <label class="col-sm-2 col-form-label">Name</label>
                 <div class="col-sm-6">
@@ -144,7 +159,7 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST') {
             ?>
             <div class="row mb-3">
                 <div class="offset-sm-2 col-sm-3 d-grid">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
                 </div>
                 <div class="col-sm-3 d-grid">
                     <button type="submit" class="btn btn-outline-primary" href="index.php" role="button">Cancel</button>
